@@ -44,7 +44,6 @@ public:
             fin.seekg(0, ios::beg);
             fin.read((char*)&sig, sizeof(sig));
             fin.read((char*)&hdr, sizeof(hdr));
-
             width = hdr.width;
             height = hdr.height;
             raw_bytes = new unsigned char** [width];
@@ -56,27 +55,35 @@ public:
                     raw_bytes[i][j] = new unsigned char[3];
                     for (int k = 0; k < 3; k++)
                     {
-                        raw_bytes[i][j][k] = ' ';
+                        raw_bytes[i][j][k] = (unsigned char)255;
                     }
                 }
             }
             fin.seekg(hdr.dataOffset, ios::beg);
             unsigned char trash_can;
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
+            int x = 0, y = 0, i = 0;
+            while(y < height - 1){
+                if (x < width-1)
                 {
-                    fin >> this->raw_bytes[x][y][0];
-                    fin >> this->raw_bytes[x][y][1];
-                    fin >> this->raw_bytes[x][y][2];
+                    x++;
                 }
-                if ((width * 3) % 4 != 0)
-                {
-                    for (int i = 0; i < (width * 3) % 4 + 1; i++)
-                    {
+                else {
+                    while ((i) % 4 != 0) {
+                        //cout << i;
+                        //cin.get();
                         fin >> trash_can;
+                        i++;
                     }
+                    x = 0;
+                    i = 0;
+                    y++;
                 }
+                fin >> this->raw_bytes[x][y][0];
+                i++;
+                fin >> this->raw_bytes[x][y][1];
+                i++;
+                fin >> this->raw_bytes[x][y][2];
+                i++;
             }
         }
         fin.close();
@@ -97,9 +104,8 @@ void DrawSpritePixels(SpriteBMP & sprite) {
 
 int main()
 {
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0,10 });
-    SpriteBMP * s = new SpriteBMP("ban hammer4.bmp");
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0,15 });
+    SpriteBMP * s = new SpriteBMP("ban hammer.bmp");
     DrawSpritePixels(*s);
     cin.get();
-    //SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0,10 });
 }
