@@ -105,7 +105,7 @@ void DrawSpritePixels(SpriteBMP & sprite) {
 int main()
 {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0,15 });
-    SpriteBMP * s = new SpriteBMP("ban hammer.bmp");
+    SpriteBMP * s = new SpriteBMP("car.bmp");
     DrawSpritePixels(*s);
     cin.get();
 }
